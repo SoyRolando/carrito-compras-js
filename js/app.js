@@ -10,7 +10,18 @@ cargarEventListeners();
 function cargarEventListeners(){
     //Cuando agregas un curso presionando 'Agregar al arrito'
     listaCursos.addEventListener('click',agregarCurso);
+
+    //Elimina cursos del carrito
+    carrito.addEventListener('click', eliminarCurso)
+
+    // Vaciar carrito
+    vaciarCarrito.addEventListener('click', () => {
+        articulosCarrito = []; // Borrar todos los elementos del arreglo
+        limpiarHTML(); // Limpiar el HTML a mostrar
+    })
 }
+
+
 
 
 // Funciones
@@ -23,9 +34,23 @@ function agregarCurso(e){
     }
 }
 
+// Elimina un curso de carrito
+function eliminarCurso(e){
+    if (e.target.classList.contains('borrar-curso')){
+        const cursoId = e.target.getAttribute('data-id');
+
+        // Eliminar del arreglo de articulosCarrito
+        articulosCarrito = articulosCarrito.filter( curso => curso.id !== cursoId)
+        console.log(articulosCarrito);
+    }
+    carritoHTML();
+
+}
+
+
+
 // Lee el contenido del HTML al que le dimos click y extrae la informacion del curso
 function leerDatosCurso(curso){
-    // console.log(curso);
 
     // Crear un objeto con el contenido del curso actual
     const infoCurso = {
@@ -41,13 +66,10 @@ function leerDatosCurso(curso){
 
 
     if(existe){
-        console.log(existe);
         // Actualizamos la cantidad
         const cursos = articulosCarrito.map( curso => {
             if(curso.id === infoCurso.id){
-                console.log('Igual encontrado');
                 curso.cantidad ++;
-                console.log(curso.cantidad);
                 return curso; // Retorna el objeto actualizado
             } else {
                 return curso; // Retorna los objetos que no estan duplicados
@@ -72,7 +94,8 @@ function carritoHTML(){
 
 
     // Recorrer los elementos del arreglo del carrito
-    articulosCarrito.forEach( curso => {         
+    articulosCarrito.forEach( curso => {  
+
         // console.log(curso);
         const {imagen, titulo, precio, cantidad, id} = curso;
         const row = document.createElement('tr'); // Pudo haberse creado un 'div', pero se crea un 'tr' para mantener el diseño de tablas.
